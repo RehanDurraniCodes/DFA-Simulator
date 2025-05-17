@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DFA Simulator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f2f2f2;
+    }
+    h2 {
+      color: #333;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #output {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>DFA Simulator for Σ = {0, 1}</h2>
+
+  <label>States (comma-separated):</label>
+  <input type="text" id="states" placeholder="e.g., q0,q1">
+
+  <label>Alphabet (comma-separated):</label>
+  <input type="text" id="alphabet" placeholder="e.g., 0,1">
+
+  <label>Start State:</label>
+  <input type="text" id="start" placeholder="e.g., q0">
+
+  <label>Final States (comma-separated):</label>
+  <input type="text" id="finals" placeholder="e.g., q1">
+
+  <label>Transitions (one per line, format: currentState,inputSymbol=newState):</label>
+  <textarea id="transitions" rows="5" placeholder="e.g., q0,0=q0
+q0,1=q1
+q1,0=q1
+q1,1=q1"></textarea>
+
+  <label>Input String (over {0,1}):</label>
+  <input type="text" id="inputString" placeholder="e.g., 01101">
+
+  <button onclick="simulateDFA()">Simulate</button>
+
+  <div id="output"></div>
+
+  <script>
+    function simulateDFA() {
+      const states = document.getElementById("states").value.split(",");
+      const alphabet = document.getElementById("alphabet").value.split(",");
+      const start = document.getElementById("start").value.trim();
+      const finals = document.getElementById("finals").value.split(",");
+      const transitionLines = document.getElementById("transitions").value.split("\n");
+      const input = document.getElementById("inputString").value.trim();
+
+      const transitions = {};
+      transitionLines.forEach(line => {
+        const [key, value] = line.split("=");
+        if (key && value) transitions[key.trim()] = value.trim();
+      });
+
+      let currentState = start;
+      const path = [currentState];
+
+      for (let i = 0; i < input.length; i++) {
+        const symbol = input[i];
+        const key = `${currentState},${symbol}`;
+        if (!(key in transitions)) {
+          document.getElementById("output").innerHTML = `<p style='color:red;'>Error: No transition for ${key}</p>`;
+          return;
+        }
+        currentState = transitions[key];
+        path.push(currentState);
+      }
+
+      const accepted = finals.includes(currentState);
+      document.getElementById("output").innerHTML = `
+        <p>Transition Path: ${path.join(" → ")}</p>
+        <p><strong>Result:</strong> ${accepted ? "<span style='color:green;'>Accepted ✅</span>" : "<span style='color:red;'>Rejected ❌</span>"}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
