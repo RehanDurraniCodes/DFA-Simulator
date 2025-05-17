@@ -27,5 +27,5 @@ Open the `index.html` file in your browser to use it locally.
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/your-username/dfa-simulator.git
-   cd dfa-simulator
+[   git clone https://github.com/your-username/dfa-simulator.git
+   cd dfa-simulator](https://github.com/RehanDurraniCodes/DFA-Simulator.git)
